@@ -45,9 +45,9 @@ def get_string_stats(df,stringvar):
   return (df.join(vader_))
 
 class Vocabulary:
-    def __init__(self,df,var):
+    def __init__(self,df,var,splitter=' '):
         self.str_values = df[var]
-        self.vocabulary = [x for y in df[var].str.split() for x in y]
+        self.vocabulary = [x for y in df[var].str.split(splitter) for x in y]
         self.counter = pd.Series(self.vocabulary).value_counts()
         self.vocab_len = len(self.counter)
         self.len_sentences = df[var].str.split().str.len()
