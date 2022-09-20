@@ -68,9 +68,10 @@ def bar(db,variable,title='',barlabs=None,barlabsrot = 'horizontal',rot=0,top=No
 
         plt.suptitle(title,size=30,fontweight='bold') if title else plt.suptitle(variable,size=30,fontweight='bold')
 
-def pie(db,variable,title=None,labels = True,legend = True,threshold = None):
+def pie(db,variable,title=None,labels = True,legend = True,threshold = 0):
     counts=db[variable].value_counts(normalize=True)
     lbs = counts.index.values
+    n = len(lbs)
 
     def my_level_list(data,threshold):
         list = []
@@ -82,15 +83,19 @@ def pie(db,variable,title=None,labels = True,legend = True,threshold = None):
         return list
 
     def my_autopct(pct):
-        return ('%.2f' % pct) if pct > threshold else ''
-
+        return formater(pct) + '%' if pct > threshold else ''
 
     plt.figure(figsize=(10,10))
+
     if labels:
-        if threshold:
-            plt.pie(x = counts,labels = my_level_list(counts,threshold),colors = sns.color_palette('pastel',len(lbs)),autopct=my_autopct)
-        else:
-            plt.pie(x = counts,labels = lbs,colors = sns.color_palette('pastel',len(lbs)),autopct=my_autopct)
+        patches, labeltext, pcts = plt.pie(x = counts,labels = my_level_list(counts,threshold),colors = sns.color_palette('pastel',n),autopct=my_autopct,textprops = dict(rotation_mode = 'anchor', va='baseline', ha='center'))
+
+        for i,l in enumerate(labeltext):
+            l.set_fontsize(250*(1/(4*(i+1))))
+
+        for i,l in enumerate(pcts):
+            l.set_fontsize(1.25*l.get_fontsize()*(1-0.05*i))
+
     else:
         plt.pie(x = counts,colors = sns.color_palette('pastel',len(lbs)))
     
@@ -98,8 +103,8 @@ def pie(db,variable,title=None,labels = True,legend = True,threshold = None):
         plt.legend(lbs)
 
     plt.suptitle(title,size=30,fontweight='bold') if title else plt.suptitle(variable,size=30,fontweight='bold')
-    plt.setp(labels, fontsize=15)
-    plt.show()
+    # plt.setp(labels, fontsize=15)
+
 
 
 def hist(db, variable,ctitle=None,nbins=10,logx=False,logy=False):
@@ -123,7 +128,7 @@ def hist(db, variable,ctitle=None,nbins=10,logx=False,logy=False):
     plt.axvline(x=db[variable].quantile(0.5),color='blue',alpha=0.5, ymax=0.90,ls='--')
     plt.axvline(x=db[variable].quantile(0.75),color='blue',alpha=0.75, ymax=0.90,ls='--')
     plt.legend((r'$q_{0.25}$',r'$q_{0.50}$',r'$q_{0.75}$'))
-    plt.suptitle(ctitle,size=20,fontstyle='italic',fontweight='bold',y=0.92) if ctitle else plt.suptitle(variable,size=20,fontstyle='italic',fontweight='bold',y=0.92)
+    plt.suptitle(ctitle,size=20,fontweight='bold',y=0.92) if ctitle else plt.suptitle(variable,size=20,fontweight='bold',y=0.92)
 
 def hist_box(db, variable,ctitle=None,nbins=10,logx=False,logy=False):
     f, (ax_box, ax_hist) = plt.subplots(2,figsize=(12,8), sharex=True, gridspec_kw={"height_ratios": (.20, .80)})
@@ -146,7 +151,7 @@ def hist_box(db, variable,ctitle=None,nbins=10,logx=False,logy=False):
     plt.axvline(x=db[variable].quantile(0.5),color='blue',alpha=0.5, ymax=0.90,ls='--')
     plt.axvline(x=db[variable].quantile(0.75),color='blue',alpha=0.75, ymax=0.90,ls='--')
     plt.legend((r'$q_{0.25}$',r'$q_{0.50}$',r'$q_{0.75}$'))
-    f.suptitle(ctitle,size=20,fontstyle='italic',fontweight='bold',y=0.92) if ctitle else f.suptitle(variable,size=20,fontstyle='italic',fontweight='bold',y=0.92)
+    f.suptitle(ctitle,size=20,fontweight='bold',y=0.92) if ctitle else f.suptitle(variable,size=20,fontweight='bold',y=0.92)
 
 def hist_by_var(db,var,by, normalize = False):
     if var == by:
