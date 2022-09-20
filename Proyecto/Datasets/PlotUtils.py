@@ -2,6 +2,7 @@
 import matplotlib.ticker as tkr
 import matplotlib.pyplot as plt
 import seaborn as sns
+import numpy as np
 
 def formater(str_number):
     try:
@@ -67,13 +68,29 @@ def bar(db,variable,title='',barlabs=None,barlabsrot = 'horizontal',rot=0,top=No
 
         plt.suptitle(title,size=30,fontweight='bold') if title else plt.suptitle(variable,size=30,fontweight='bold')
 
-def pie(db,variable,title=None,labels = True,legend = True):
+def pie(db,variable,title=None,labels = True,legend = True,threshold = None):
     counts=db[variable].value_counts(normalize=True)
     lbs = counts.index.values
 
+    def my_level_list(data,threshold):
+        list = []
+        for i in range(len(data)):
+            if (data[i]*100/np.sum(data)) > threshold : #2%
+                list.append(lbs[i])
+            else:
+                list.append('')
+        return list
+
+    def my_autopct(pct):
+        return ('%.2f' % pct) if pct > threshold else ''
+
+
     plt.figure(figsize=(10,10))
     if labels:
-        plt.pie(x = counts,labels = lbs,colors = sns.color_palette('pastel',len(lbs)))
+        if threshold:
+            plt.pie(x = counts,labels = my_level_list(counts,threshold),colors = sns.color_palette('pastel',len(lbs)),autopct=my_autopct)
+        else:
+            plt.pie(x = counts,labels = lbs,colors = sns.color_palette('pastel',len(lbs)),autopct=my_autopct)
     else:
         plt.pie(x = counts,colors = sns.color_palette('pastel',len(lbs)))
     
@@ -81,7 +98,7 @@ def pie(db,variable,title=None,labels = True,legend = True):
         plt.legend(lbs)
 
     plt.suptitle(title,size=30,fontweight='bold') if title else plt.suptitle(variable,size=30,fontweight='bold')
-        
+    plt.setp(labels, fontsize=15)
     plt.show()
 
 
