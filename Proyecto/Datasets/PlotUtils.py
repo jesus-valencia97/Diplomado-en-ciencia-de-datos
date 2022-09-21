@@ -88,7 +88,7 @@ def pie(db,variable,title=None,labels = True,legend = True,threshold = 0):
     plt.figure(figsize=(10,10))
 
     if labels:
-        patches, labeltext, pcts = plt.pie(x = counts,labels = my_level_list(counts,threshold),colors = sns.color_palette('pastel',n),autopct=my_autopct,textprops = dict(rotation_mode = 'anchor', va='baseline', ha='center'))
+        patches, labeltext, pcts = plt.pie(x = counts,labels = my_level_list(counts,threshold),colors = sns.color_palette('pastel',n),autopct=my_autopct,textprops = dict(rotation_mode = 'default', va='center', ha='center'))
 
         for i,l in enumerate(labeltext):
             l.set_fontsize(250*(1/(4*(i+1))))
