@@ -103,7 +103,7 @@ def pie(db,variable,title=None,labels = True,legend = True,threshold = 0):
         plt.legend(lbs)
 
     plt.suptitle(title,size=30,fontweight='bold') if title else plt.suptitle(variable,size=30,fontweight='bold')
-    # plt.setp(labels, fontsize=15)
+
 
 
 
@@ -113,14 +113,8 @@ def hist(db, variable,ctitle=None,nbins=10,logx=False,logy=False):
 
     db[variable].plot(kind="hist", logx=logx, logy=logy,bins=nbins, histtype='stepfilled',alpha=0.3, ec="k",edgecolor="skyblue", linewidth=2 ,label='_nolegend_')
     
-    # plt.gca().xaxis.set_major_formatter(matplotlib.ticker.ScalarFormatter())
-    # plt.gca().xaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter(':,.2f'))
-    # plt.gca().xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda x, pos: str(int(round(x)))))
     plt.gca().xaxis.set_major_formatter(tkr.FuncFormatter(lambda y,  p: format(int(round(y,0)), ',')))
 
-    # plt.gca().yaxis.set_major_formatter(matplotlib.ticker.ScalarFormatter())
-    # plt.gca().yaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter('{x:,}'))
-    # plt.gca().yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda x, pos: str(int(round(x)))))
     plt.gca().yaxis.set_major_formatter(tkr.FuncFormatter(lambda y,  p: format(int(round(y,0)), ',')))
     
     plt.grid(False)
@@ -136,14 +130,8 @@ def hist_box(db, variable,ctitle=None,nbins=10,logx=False,logy=False):
     db[variable].plot(kind="hist", ax=ax_hist,logx=logx, logy=logy,bins=nbins, histtype='stepfilled',alpha=0.3, ec="k",edgecolor="skyblue", linewidth=2 ,label='_nolegend_')
     db[variable].plot(kind="box", ax=ax_box,notch=True, logx=logx,logy=logy ,vert=False,label='',color='navy',flierprops = dict(marker='.', markerfacecolor='skyblue', markersize=7,linestyle = '',markeredgecolor='black',markeredgewidth=0.1))
 
-    # plt.gca().xaxis.set_major_formatter(matplotlib.ticker.ScalarFormatter())
-    # plt.gca().xaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter(':,.2f'))
-    # plt.gca().xaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda x, pos: str(int(round(x)))))
     plt.gca().xaxis.set_major_formatter(tkr.FuncFormatter(lambda y,  p: format(int(round(y,0)), ',')))
 
-    # plt.gca().yaxis.set_major_formatter(matplotlib.ticker.ScalarFormatter())
-    # plt.gca().yaxis.set_major_formatter(matplotlib.ticker.FormatStrFormatter('{x:,}'))
-    # plt.gca().yaxis.set_major_formatter(matplotlib.ticker.FuncFormatter(lambda x, pos: str(int(round(x)))))
     plt.gca().yaxis.set_major_formatter(tkr.FuncFormatter(lambda y,  p: format(int(round(y,0)), ',')))
     
     plt.grid(False)
@@ -171,11 +159,7 @@ def hist_by_var(db,var,by, normalize = False):
                     plt.xticks(rotation=0)
 
                     for c in ax.containers:
-
-                        # Optional: if the segment is small or 0, customize the labels
                         labels = [v.get_height() if v.get_height() > 0 else '' for v in c]
-                        
-                        # remove the labels parameter if it's not needed for customized labels
                         ax.bar_label(c, labels=labels, label_type='center')
 
                     plt.show()
@@ -185,20 +169,13 @@ def hist_by_var(db,var,by, normalize = False):
                     aux[by] = db[by]
                     aux = aux.value_counts().reset_index().pivot_table(index=var,columns = by,values=0,fill_value=0)
                     aux = aux.T
-                    # aux.columns = aux.columns.map(lambda x: x.left)
+
                     aux['TOTAL'] = aux.apply(sum,axis=1)
                     aux = aux.apply(lambda x : x / sum(x), axis=0)
                     ax = aux.T.plot(kind='bar',stacked=True,width=0.9)
-                    # plt.locator_params(axis='x', nbins=6)
-                    # plt.xticks(rotation=0)
-                    
-
+    
                     for c in ax.containers:
-
-                        # Optional: if the segment is small or 0, customize the labels
                         labels = [v.get_height() if v.get_height() > 0 else '' for v in c]
-                        
-                        # remove the labels parameter if it's not needed for customized labels
                         ax.bar_label(c, labels=labels, label_type='center')
 
                     plt.show()
@@ -214,11 +191,7 @@ def hist_by_var(db,var,by, normalize = False):
                     plt.xticks(rotation=0)
 
                     for c in ax.containers:
-
-                        # Optional: if the segment is small or 0, customize the labels
                         labels = [v.get_height() if v.get_height() > 0 else '' for v in c]
-                        
-                        # remove the labels parameter if it's not needed for customized labels
                         ax.bar_label(c, labels=labels, label_type='center')
 
                     plt.show()
@@ -230,17 +203,10 @@ def hist_by_var(db,var,by, normalize = False):
                     aux[by] = db[by]
                     aux = aux.value_counts().reset_index().pivot_table(index=var,columns = by,values=0,fill_value=0)
                     aux = aux.T
-                    # aux.columns = aux.columns.map(lambda x: x.left)
                     ax = aux.T.plot(kind='bar',stacked=True,width=1)
-                    # plt.locator_params(axis='x', nbins=6)
-                    # plt.xticks(rotation=0)
 
                     for c in ax.containers:
-
-                        # Optional: if the segment is small or 0, customize the labels
                         labels = [v.get_height() if v.get_height() > 0 else '' for v in c]
-                        
-                        # remove the labels parameter if it's not needed for customized labels
                         ax.bar_label(c, labels=labels, label_type='center')
 
                     plt.show()
